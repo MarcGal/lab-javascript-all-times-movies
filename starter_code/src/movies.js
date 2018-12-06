@@ -29,7 +29,7 @@ function turnHoursToMinutes (movies){
         director: movie.director,
         // retornamos cada objeto movie. La duración se pasa primero a string
         // y luego a numero.
-        duration: parseInt(inNumbers.join()),
+        duration: parseInt(inNumbers),
         genre: movie.genre,
         rate: movie.rate
       };
@@ -37,7 +37,7 @@ function turnHoursToMinutes (movies){
   // retornamos array nuevo creado al inicio
   return durationAsNumber;
 }
-console.log(turnHoursToMinutes(movies));
+// console.log(turnHoursToMinutes(movies));
 
 
 
@@ -192,8 +192,41 @@ function orderAlphabetically (movies){
 // Should return the correct answer to a multiple elements array
 // Should return the oldest year when there is a tie
 
-function bestYearAvg (movies){
-  if (movies.length === 0){
-    return undefined;
+function avg (movies){
+  // creamos objeto vacio
+  let moviesByyear = {};
+
+  let max = 0;
+
+  let yearMax = '';
+
+  // primero recorremos el array
+  movies.forEach(function(movie){
+    //  establecemos la condicion. Si no existe el año creamos un key con el valor.
+    if (moviesByyear[movie.year] === undefined){
+    // vamos a asignar el valor year de movie como propiedad
+    // se hace con brackets. 
+      moviesByyear[movie.year] = [];
+      moviesByyear[movie.year].push(parseFloat(movie.rate));
+    } else {
+      moviesByyear[movie.year].push(parseFloat(movie.rate));
+    }
+  });
+  for (let year in moviesByyear){
+    let sumOfrates = moviesByyear[year].reduce(function (accu, rate){
+      return accu + rate;
+    })
+    let avg = sumOfrates / moviesByyear[year].length;
+    moviesByyear[year] = avg;
+
+    if (max < moviesByyear[year]){
+      max = moviesByyear[year];
+      yearMax = year;
+    }
   }
+
+  return {
+    year: yearMax,
+    rate: max,
+  };
 }
